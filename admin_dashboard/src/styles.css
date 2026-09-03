@@ -1,0 +1,385 @@
+:root {
+  --bg: #f7f5fb;
+  --surface: #ffffff;
+  --text: #1a0f2e;
+  --text-muted: #6b6478;
+  --border: #e4dff0;
+  --primary: #5b2a9e;
+  --primary-fg: #ffffff;
+  --danger: #b3261e;
+  --danger-bg: #fbe8e6;
+  --success: #1e6b3a;
+  --success-bg: #e4f5ea;
+  --nav-bg: #1a0f2e;
+  --nav-fg: #d8cdf0;
+  --nav-fg-active: #ffffff;
+  --radius: 12px;
+  --tap-min: 44px;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #14101c;
+    --surface: #1e1830;
+    --text: #f1edf8;
+    --text-muted: #a89fc0;
+    --border: #322a48;
+    --primary: #a684e8;
+    --primary-fg: #1a0f2e;
+    --danger: #ff6f66;
+    --danger-bg: #3a1c1c;
+    --success: #6fd393;
+    --success-bg: #163a24;
+    --nav-bg: #0f0a1a;
+    --nav-fg: #c6b9e6;
+    --nav-fg-active: #ffffff;
+    color-scheme: dark;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, 'Segoe UI', Roboto, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+button, input, select {
+  font: inherit;
+  color: inherit;
+}
+
+/* ---------- Shell: mobile-first (bottom nav), sidebar da tablet in su ---------- */
+
+.app-shell {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  padding-top: max(14px, env(safe-area-inset-top));
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.app-topbar h1 {
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.app-content {
+  flex: 1;
+  padding: 16px;
+  padding-bottom: calc(80px + env(safe-area-inset-bottom));
+  max-width: 960px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  display: flex;
+  background: var(--nav-bg);
+  padding-bottom: env(safe-area-inset-bottom);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.bottom-nav a {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 10px 4px;
+  min-height: var(--tap-min);
+  color: var(--nav-fg);
+  text-decoration: none;
+  font-size: 0.7rem;
+}
+
+.bottom-nav a.active {
+  color: var(--nav-fg-active);
+}
+
+.bottom-nav .icon {
+  font-size: 1.3rem;
+  line-height: 1;
+}
+
+@media (min-width: 768px) {
+  .app-shell {
+    flex-direction: row;
+  }
+
+  .bottom-nav {
+    position: static;
+    flex-direction: column;
+    width: 220px;
+    padding: 16px 8px;
+    gap: 4px;
+    border-top: none;
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .bottom-nav a {
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: var(--radius);
+    font-size: 0.85rem;
+  }
+
+  .bottom-nav a.active {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .app-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .app-content {
+    padding: 24px;
+    padding-bottom: 24px;
+  }
+}
+
+/* ---------- Primitivi ---------- */
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: var(--tap-min);
+  padding: 0 16px;
+  border-radius: var(--radius);
+  border: 1px solid var(--primary);
+  background: var(--primary);
+  color: var(--primary-fg);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn.secondary {
+  background: transparent;
+  color: var(--primary);
+}
+
+.btn.danger {
+  background: transparent;
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.field label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.field input, .field select {
+  min-height: var(--tap-min);
+  padding: 0 12px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+@media (min-width: 600px) {
+  .stat-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  text-align: center;
+}
+
+.stat-card .value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.stat-card .label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.badge.danger {
+  background: var(--danger-bg);
+  color: var(--danger);
+}
+
+.badge.success {
+  background: var(--success-bg);
+  color: var(--success);
+}
+
+.error-text {
+  color: var(--danger);
+  font-size: 0.85rem;
+}
+
+/* ---------- Tabella responsive: vera <table> da tablet in su,
+   stack di "card" per riga sotto i 640px (CSS-only, stesso markup). ---------- */
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.data-table th {
+  display: none;
+}
+
+.data-table tr {
+  display: block;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 10px;
+  padding: 8px 12px;
+}
+
+.data-table td {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 0;
+  border: none;
+  text-align: right;
+}
+
+.data-table td::before {
+  content: attr(data-label);
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  text-align: left;
+}
+
+@media (min-width: 640px) {
+  .data-table th, .data-table td {
+    display: table-cell;
+    text-align: left;
+    padding: 10px 12px;
+  }
+
+  .data-table td::before {
+    content: none;
+  }
+
+  .data-table tr {
+    display: table-row;
+    border: none;
+    border-bottom: 1px solid var(--border);
+    border-radius: 0;
+    margin-bottom: 0;
+  }
+
+  .data-table thead {
+    display: table-header-group;
+  }
+
+  .data-table th {
+    display: table-cell;
+    text-align: left;
+    padding: 10px 12px;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+  }
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  gap: 12px;
+}
+
+.page-header h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.login-page {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 360px;
+}

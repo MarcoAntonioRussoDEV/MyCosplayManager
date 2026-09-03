@@ -1,0 +1,11 @@
+
+.vscode
+backend/target/
+backend/secrets/
+backend/uploads/
+/secrets/
+.claude/*.lock
+*.env
+!.env.example
+
+.claude
