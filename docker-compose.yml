@@ -36,6 +36,13 @@ services:
             - uploads_data:/data/uploads
             - ./secrets:/data/secrets:ro
 
+    admin:
+        build: ./admin_dashboard
+        depends_on:
+            - backend
+        ports:
+            - "8081:80"
+
 volumes:
     postgres_data:
     uploads_data:

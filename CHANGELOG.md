@@ -11,6 +11,21 @@ Fino ad allora ogni modifica si accumula in **[Non rilasciato]**.
 
 ## [Non rilasciato] — 0.1.0-SNAPSHOT
 
+### Deploy
+
+- Milestone 6: `admin_dashboard` dockerizzata (build multi-stage Node→nginx,
+  `admin_dashboard/Dockerfile` + `nginx.conf`) e aggiunta a
+  `docker-compose.yml` come servizio `admin` (porta 8081). nginx serve i
+  file statici e fa da reverse proxy per `/api/**` verso `backend:8080`
+  sulla rete Docker interna (stessa origin per il browser, niente CORS in
+  produzione, stesso principio del proxy di Vite in dev). Service
+  worker/manifest PWA esclusi dalla cache immutabile. Verificato:
+  `docker compose up` avvia tutto lo stack (postgres+backend+admin) con un
+  solo comando, index/SPA-fallback/proxy `/api`/manifest tutti risposti
+  correttamente, login Google renderizzato su `http://localhost:8081`
+  (richiede registrare anche questa origine sul client OAuth Web, stessa
+  procedura gia' fatta per `:5173`).
+
 ### Backend
 
 - Scaffold Spring Boot (Java 21, layered: `controller/service/repository/entity/dto/security`),
