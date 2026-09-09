@@ -123,6 +123,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get addToShoppingList => 'Anadir a la lista de compras';
 
   @override
+  String get addedToShoppingList => 'Anadido a la lista de compras';
+
+  @override
   String get itemName => 'Nombre del producto';
 
   @override

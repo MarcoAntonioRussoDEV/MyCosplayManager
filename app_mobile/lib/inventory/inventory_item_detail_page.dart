@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../auth/auth_service.dart';
 import '../core/models/inventory_item.dart';
 import '../l10n/app_localizations.dart';
+import '../shopping_list/shopping_list_repository.dart';
 import 'inventory_repository.dart';
 
 class InventoryItemDetailPage extends StatefulWidget {
@@ -17,13 +18,16 @@ class InventoryItemDetailPage extends StatefulWidget {
 
 class _InventoryItemDetailPageState extends State<InventoryItemDetailPage> {
   late final InventoryRepository _repository;
+  late final ShoppingListRepository _shoppingListRepository;
   late InventoryItem _item;
   bool _busy = false;
 
   @override
   void initState() {
     super.initState();
-    _repository = InventoryRepository(context.read<AuthService>().apiClient);
+    final apiClient = context.read<AuthService>().apiClient;
+    _repository = InventoryRepository(apiClient);
+    _shoppingListRepository = ShoppingListRepository(apiClient);
     _item = widget.item;
   }
 
@@ -59,6 +63,23 @@ class _InventoryItemDetailPageState extends State<InventoryItemDetailPage> {
       if (mounted) Navigator.of(context).pop(true);
     } catch (e) {
       _showError(e);
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  Future<void> _addToShoppingList() async {
+    final l10n = AppLocalizations.of(context)!;
+    setState(() => _busy = true);
+    try {
+      await _shoppingListRepository.create(
+        productId: _item.product.id,
+        quantity: _item.quantity,
+        unit: _item.unit,
+      );
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.addedToShoppingList)));
+    } catch (e) {
+      _showError(e);
+    } finally {
       if (mounted) setState(() => _busy = false);
     }
   }
@@ -127,7 +148,13 @@ class _InventoryItemDetailPageState extends State<InventoryItemDetailPage> {
   }
 
   List<Widget> _statusActions(AppLocalizations l10n) {
-    final actions = <Widget>[];
+    final actions = <Widget>[
+      OutlinedButton.icon(
+        onPressed: _addToShoppingList,
+        icon: const Icon(Icons.add_shopping_cart_outlined),
+        label: Text(l10n.addToShoppingList),
+      ),
+    ];
     if (_item.status == InventoryItemStatus.sealed_) {
       actions.add(FilledButton.icon(
         onPressed: () => _changeStatus(InventoryItemStatus.opened),

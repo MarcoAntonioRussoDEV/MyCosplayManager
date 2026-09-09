@@ -324,6 +324,12 @@ abstract class AppLocalizations {
   /// **'Add to shopping list'**
   String get addToShoppingList;
 
+  /// No description provided for @addedToShoppingList.
+  ///
+  /// In en, this message translates to:
+  /// **'Added to shopping list'**
+  String get addedToShoppingList;
+
   /// No description provided for @itemName.
   ///
   /// In en, this message translates to:

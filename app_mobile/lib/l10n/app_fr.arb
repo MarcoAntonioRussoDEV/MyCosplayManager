@@ -37,6 +37,8 @@
     "remainingQuantity": "Quantite restante",
     "shoppingListEmpty": "La liste de courses est vide.",
     "addToShoppingList": "Ajouter a la liste de courses",
+    "addedToShoppingList": "Ajoute a la liste de courses",
+    "addToShoppingList": "Ajouter a la liste de courses",
     "itemName": "Nom du produit",
     "settingsTitle": "Parametres",
     "notificationDaysBefore": "Me prevenir ce nombre de jours avant la peremption",

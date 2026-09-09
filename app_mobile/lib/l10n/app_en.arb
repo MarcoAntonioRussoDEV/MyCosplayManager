@@ -37,6 +37,8 @@
     "remainingQuantity": "Remaining quantity",
     "shoppingListEmpty": "Shopping list is empty.",
     "addToShoppingList": "Add to shopping list",
+    "addedToShoppingList": "Added to shopping list",
+    "addToShoppingList": "Add to shopping list",
     "itemName": "Item name",
     "settingsTitle": "Settings",
     "notificationDaysBefore": "Notify me this many days before expiry",

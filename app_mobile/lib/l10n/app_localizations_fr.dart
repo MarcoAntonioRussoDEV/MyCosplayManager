@@ -121,6 +121,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get addToShoppingList => 'Ajouter a la liste de courses';
 
   @override
+  String get addedToShoppingList => 'Ajoute a la liste de courses';
+
+  @override
   String get itemName => 'Nom du produit';
 
   @override

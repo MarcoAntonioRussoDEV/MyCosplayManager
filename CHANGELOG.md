@@ -11,6 +11,13 @@ Fino ad allora ogni modifica si accumula in **[Non rilasciato]**.
 
 ## [Non rilasciato] — 0.1.0-SNAPSHOT
 
+### App mobile — "Aggiungi alla lista spesa" dal dettaglio prodotto
+
+- Nuovo bottone nel dettaglio articolo inventario, accanto a "Consumato"/
+  "Scartato" (sempre visibile, non legato allo stato) — crea una voce in
+  lista spesa per lo stesso prodotto, precompilata con quantita'/unita'
+  dell'articolo corrente.
+
 ### Backend/Dashboard — whitelist admin in DB invece che in env var
 
 - Nuova tabella `admin_emails` (migration `V9`), seed con l'unico admin

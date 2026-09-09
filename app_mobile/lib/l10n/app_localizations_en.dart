@@ -120,6 +120,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get addToShoppingList => 'Add to shopping list';
 
   @override
+  String get addedToShoppingList => 'Added to shopping list';
+
+  @override
   String get itemName => 'Item name';
 
   @override

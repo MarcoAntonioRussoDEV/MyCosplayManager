@@ -37,6 +37,8 @@
     "remainingQuantity": "Cantidad restante",
     "shoppingListEmpty": "La lista de compras esta vacia.",
     "addToShoppingList": "Anadir a la lista de compras",
+    "addedToShoppingList": "Anadido a la lista de compras",
+    "addToShoppingList": "Anadir a la lista de compras",
     "itemName": "Nombre del producto",
     "settingsTitle": "Ajustes",
     "notificationDaysBefore": "Avisame con estos dias de antelacion a la caducidad",

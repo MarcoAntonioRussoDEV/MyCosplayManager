@@ -122,6 +122,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get addToShoppingList => 'Aggiungi alla lista spesa';
 
   @override
+  String get addedToShoppingList => 'Aggiunto alla lista spesa';
+
+  @override
   String get itemName => 'Nome prodotto';
 
   @override
