@@ -11,6 +11,29 @@ Fino ad allora ogni modifica si accumula in **[Non rilasciato]**.
 
 ## [Non rilasciato] — 0.1.0-SNAPSHOT
 
+### Fix: DDNS TP-Link incompatibile con Let's Encrypt, passato a No-IP
+
+- Causa: i nameserver di TP-Link DDNS non supportano TCP ne' la
+  case-randomization DNS 0x20 — requisiti di Let's Encrypt per prevenire
+  spoofing. Il certificato condiviso con OperazioneFratellino non si e' mai
+  potuto rinnovare (bug noto, confermato dal forum ufficiale Let's Encrypt),
+  scaduto silenziosamente da settimane.
+- Nel frattempo risolto anche il vero motivo per cui il rinnovo falliva
+  comunque anche a DNS funzionante: l'authenticator era `standalone` (deve
+  aprire la porta 80, sempre occupata da OF) invece di `webroot` (usa il
+  path ACME challenge gia' servito da nginx di OF). Passato a webroot,
+  rinnovo automatico ora dovrebbe funzionare davvero.
+- Dominio pubblico cambiato da `ocrama94.tplinkdns.com` a
+  `ocrama94.ddns.net` (No-IP) — Caddyfile e preset "Server remoto"
+  dell'app aggiornati. TP-Link resta configurato per la risoluzione DNS
+  normale ma non e' piu' usato per i certificati.
+- **Ancora da fare** (non mio, tocca la build di OperazioneFratellino):
+  `OperazioneFratellino` ha ancora `DOMAIN`/`FRONTEND_URL`/
+  `CORS_ALLOWED_ORIGINS` puntati al vecchio `ocrama94.tplinkdns.com` nel suo
+  `.env.prod`, e il nome dominio e' baked-in nell'immagine del frontend
+  (build arg) — va aggiornato e ribuildato separatamente quando si decide
+  di migrare anche quel servizio al nuovo dominio.
+
 ### Deploy sul server di casa (OcramaHomeServer), HTTPS reale
 
 - Progetto clonato in `~/Projects/MyCosplayManager` sul Raspberry Pi che gia'
