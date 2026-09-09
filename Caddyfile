@@ -1,9 +1,9 @@
-ocrama94.tplinkdns.com:9443 {
-	tls /etc/letsencrypt/live/ocrama94.tplinkdns.com/fullchain.pem /etc/letsencrypt/live/ocrama94.tplinkdns.com/privkey.pem
+ocrama94.ddns.net:9443 {
+	tls /etc/letsencrypt/live/ocrama94.ddns.net/fullchain.pem /etc/letsencrypt/live/ocrama94.ddns.net/privkey.pem
 	reverse_proxy backend:8080
 }
 
-ocrama94.tplinkdns.com:9444 {
-	tls /etc/letsencrypt/live/ocrama94.tplinkdns.com/fullchain.pem /etc/letsencrypt/live/ocrama94.tplinkdns.com/privkey.pem
+ocrama94.ddns.net:9444 {
+	tls /etc/letsencrypt/live/ocrama94.ddns.net/fullchain.pem /etc/letsencrypt/live/ocrama94.ddns.net/privkey.pem
 	reverse_proxy admin:80
 }
