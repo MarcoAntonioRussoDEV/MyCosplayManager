@@ -289,7 +289,12 @@ class _ProjectDetailPageState extends State<ProjectDetailPage> {
                                     note.text,
                                     style: note.done ? const TextStyle(decoration: TextDecoration.lineThrough) : null,
                                   ),
-                                  subtitle: Text(_formatNotifyAt(note.notifyAt)),
+                                  subtitle: Text(
+                                    note.taskAt.isAtSameMomentAs(note.notifyAt)
+                                        ? _formatNotifyAt(note.taskAt)
+                                        : '${l10n.taskSectionLabel}: ${_formatNotifyAt(note.taskAt)} · '
+                                            '${l10n.notifySectionLabel}: ${_formatNotifyAt(note.notifyAt)}',
+                                  ),
                                   trailing: IconButton(
                                     icon: const Icon(Icons.delete_outline),
                                     onPressed: () => _deleteNote(note),

@@ -7,8 +7,9 @@ services:
             POSTGRES_DB: mycosplaymanager
             POSTGRES_USER: mycosplaymanager
             POSTGRES_PASSWORD: mycosplaymanager
-        ports:
-            - "5432:5432"
+        # Niente porta pubblicata verso l'host: solo backend/altri container sulla rete
+        # docker interna ci parlano (via hostname "postgres"), nessun motivo per esporlo
+        # fuori, tanto meno su un deploy raggiungibile da internet.
         volumes:
             - postgres_data:/var/lib/postgresql/data
         healthcheck:
@@ -45,6 +46,23 @@ services:
             - backend
         ports:
             - "8081:80"
+
+    # Termina TLS per backend/admin riusando il certificato Let's Encrypt gia' emesso
+    # per questo stesso dominio da OperazioneFratellino (stesso host, stessa DDNS) —
+    # niente richiesta di un nuovo certificato, niente conflitto sulle porte 80/443
+    # (gia' occupate da OF, servono solo per la sfida ACME/il rinnovo del certbot di OF).
+    caddy:
+        image: caddy:2-alpine
+        container_name: mcm-caddy
+        depends_on:
+            - backend
+            - admin
+        ports:
+            - "8443:8443"
+            - "8444:8444"
+        volumes:
+            - ./Caddyfile:/etc/caddy/Caddyfile:ro
+            - /etc/letsencrypt:/etc/letsencrypt:ro
 
 volumes:
     postgres_data:

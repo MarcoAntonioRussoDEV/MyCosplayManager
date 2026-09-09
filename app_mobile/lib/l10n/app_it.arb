@@ -79,9 +79,14 @@
     "addNote": "Aggiungi nota",
     "editNote": "Modifica nota",
     "noteTextField": "Cosa devi fare",
-    "dueDateField": "Scadenza",
+    "dueDateField": "Data notifica",
     "notifyDaysBeforeField": "Preavviso notifica (giorni prima)",
     "noNotes": "Nessuna nota ancora per questo progetto.",
     "deleteNoteConfirm": "Eliminare questa nota?",
-    "notifyTimeField": "Ora"
+    "notifyTimeField": "Ora notifica",
+    "notifyExplainer": "Riceverai una notifica push a questa data e ora.",
+    "taskDateField": "Data compito",
+    "taskTimeField": "Ora compito",
+    "taskSectionLabel": "Quando va fatto",
+    "notifySectionLabel": "Promemoria"
 }

@@ -252,7 +252,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get noteTextField => 'Cosa devi fare';
 
   @override
-  String get dueDateField => 'Scadenza';
+  String get dueDateField => 'Data notifica';
 
   @override
   String get notifyDaysBeforeField => 'Preavviso notifica (giorni prima)';
@@ -264,5 +264,21 @@ class AppLocalizationsIt extends AppLocalizations {
   String get deleteNoteConfirm => 'Eliminare questa nota?';
 
   @override
-  String get notifyTimeField => 'Ora';
+  String get notifyTimeField => 'Ora notifica';
+
+  @override
+  String get notifyExplainer =>
+      'Riceverai una notifica push a questa data e ora.';
+
+  @override
+  String get taskDateField => 'Data compito';
+
+  @override
+  String get taskTimeField => 'Ora compito';
+
+  @override
+  String get taskSectionLabel => 'Quando va fatto';
+
+  @override
+  String get notifySectionLabel => 'Promemoria';
 }

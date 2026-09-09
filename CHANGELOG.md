@@ -11,6 +11,67 @@ Fino ad allora ogni modifica si accumula in **[Non rilasciato]**.
 
 ## [Non rilasciato] — 0.1.0-SNAPSHOT
 
+### Deploy sul server di casa (OcramaHomeServer), HTTPS reale
+
+- Progetto clonato in `~/Projects/MyCosplayManager` sul Raspberry Pi che gia'
+  ospita OperazioneFratellino (stesso dominio DDNS `ocrama94.tplinkdns.com`,
+  gestito da TP-Link). Nessun conflitto reale con OF: OF usa 80/443, MCM usa
+  8080/8081/8443/8444 — entrambi i servizi restano attivi.
+- Nuovo servizio `caddy` in `docker-compose.yml` (+ `Caddyfile`): termina TLS
+  per backend (`:8443`) e admin dashboard (`:8444`) riusando il certificato
+  Let's Encrypt che OF ha gia' emesso per lo stesso dominio (mount read-only
+  di `/etc/letsencrypt`) — nessun nuovo certificato da richiedere, nessuna
+  sfida ACME su porta 80 (occupata da OF/certbot).
+- Postgres non pubblica piu' la porta verso l'host (`5432`) — nessun motivo
+  per esporlo fuori dalla rete docker interna, tanto meno su un deploy
+  raggiungibile da internet.
+- App: preset "Server remoto (ocrama94)" ora punta a
+  `https://ocrama94.tplinkdns.com:8443` (era HTTP su :8080) — rimossa anche
+  l'eccezione cleartext in `AndroidManifest.xml`/`network_security_config.xml`,
+  non piu' necessaria con TLS reale.
+
+### App mobile — preset backend remoto per test fuori rete locale
+
+- Nuovo preset "Server remoto (ocrama94)" nello switcher backend
+  (`http://ocrama94.tplinkdns.com:8080`), preselezionato di default quando
+  l'app e' ancora sul default compilato (nessuna scelta esplicita salvata) —
+  utile per far provare l'app a chi non e' sulla stessa rete locale (es. il
+  socio) senza dover digitare un URL custom.
+- `network_security_config.xml`: eccezione cleartext (HTTP semplice, non
+  HTTPS) solo per `ocrama94.tplinkdns.com` — Android blocca il traffico non
+  cifrato di default dalla API 28, altrimenti l'app non si sarebbe nemmeno
+  connessa. Va bene per test brevi, non e' un canale cifrato.
+- **Bloccanti non risolvibili da qui**, entrambi lato utente: il Windows
+  Firewall di questo PC non ha regole inbound per 8080/8081 (default:
+  blocca) e il router non sembra inoltrare quelle porte verso questo PC
+  (hostname risolve, ma nessuna risposta dall'esterno). Attenzione se si apre
+  il port forwarding: NON esporre la porta 5432 (Postgres), solo 8080/8081 —
+  il DB usa credenziali deboli (`mycosplaymanager`/`mycosplaymanager`).
+
+### Push notification reali (Firebase Cloud Messaging), finalmente collegate end-to-end
+
+- Motivo: le notifiche erano "solo loggate" fin dalla milestone 3 — il backend
+  aveva gia' tutto (`DeviceTokenController`, scheduler), ma l'app non aveva
+  MAI integrato `firebase_messaging`, quindi nessun token veniva mai
+  registrato e non c'era nessuna credenziale Firebase reale lato backend.
+- App Android registrata su Firebase (progetto Firebase gia' esistente
+  `cosplayinventory-23b69`, package `com.mycosplaymanager.app`):
+  `google-services.json` in `app_mobile/android/app/` (gitignored),
+  plugin Gradle `com.google.gms.google-services` applicato
+  (`settings.gradle.kts` + `app/build.gradle.kts`), permesso
+  `POST_NOTIFICATIONS` in `AndroidManifest.xml`.
+- Backend: `firebase-service-account.json` (chiave privata service account,
+  generata da Firebase Console) in `secrets/` — gia' montata dal
+  `docker-compose.yml` esistente (`FIREBASE_CREDENTIALS_PATH`). Verificato al
+  riavvio: log passa da "Firebase non configurato" a "Firebase Cloud
+  Messaging inizializzato".
+- App: nuovo `core/push_notification_service.dart` — chiede il permesso
+  notifiche, ottiene il token FCM, lo registra su `POST /api/device-tokens`
+  dopo login/restore sessione, si ri-registra su refresh del token, si
+  deregistra su logout. `main.dart` inizializza Firebase prima di `runApp`.
+  Build verificata: nessun crash, log conferma
+  `FirebaseApp initialization successful`.
+
 ### Backend/App mobile — note schedulate per progetto (todo con notifica push)
 
 - Nuova entita' `ProjectNote`: testo libero + istante preciso di notifica
@@ -34,6 +95,18 @@ Fino ad allora ogni modifica si accumula in **[Non rilasciato]**.
   scelte con due picker separati), FAB del dettaglio progetto ora apre un
   menu con due scelte ("Aggiungi materiale" / "Aggiungi nota") invece di
   andare dritto al materiale.
+- Fix UX: le etichette dei due picker dicevano "Scadenza"/"Ora" senza mai
+  nominare la notifica — sembrava che il campo "data/ora della notifica"
+  fosse sparito dopo il redesign a istante esatto. Rinominate in "Data
+  notifica"/"Ora notifica" + una riga esplicativa.
+- Ripensamento: `notifyAt` non basta, servono DUE istanti indipendenti —
+  quando va svolto il compito (`taskAt`) e quando arriva il promemoria push
+  (`notifyAt`), non necessariamente lo stesso momento (es. compito il 30/09
+  10:00 "gara", notifica la sera prima). Migration
+  `V8__project_notes_task_time.sql` (backfill `task_at = notify_at` per le
+  note esistenti). App: schermata nota divisa in due sezioni ("Quando va
+  fatto" / "Promemoria"), quattro picker indipendenti (data+ora per
+  ciascuno). Lo scheduler resta invariato, agisce solo su `notifyAt`.
 
 ### Backend/Dashboard admin — notifica push "a comando"
 

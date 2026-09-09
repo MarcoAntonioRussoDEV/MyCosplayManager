@@ -79,9 +79,14 @@
     "addNote": "Ajouter une note",
     "editNote": "Modifier la note",
     "noteTextField": "Quoi faire",
-    "dueDateField": "Echeance",
+    "dueDateField": "Date de notification",
     "notifyDaysBeforeField": "Rappel (jours avant)",
     "noNotes": "Aucune note pour ce projet pour l'instant.",
     "deleteNoteConfirm": "Supprimer cette note ?",
-    "notifyTimeField": "Heure"
+    "notifyTimeField": "Heure de notification",
+    "notifyExplainer": "Vous recevrez une notification push a cette date et heure.",
+    "taskDateField": "Date de la tache",
+    "taskTimeField": "Heure de la tache",
+    "taskSectionLabel": "Quand la faire",
+    "notifySectionLabel": "Rappel"
 }

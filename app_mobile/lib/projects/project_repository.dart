@@ -105,17 +105,29 @@ class ProjectRepository {
     return json.map((e) => ProjectNote.fromJson(e as Map<String, dynamic>)).toList();
   }
 
-  Future<ProjectNote> addNote(String projectId, {required String text, required DateTime notifyAt}) async {
+  Future<ProjectNote> addNote(
+    String projectId, {
+    required String text,
+    required DateTime taskAt,
+    required DateTime notifyAt,
+  }) async {
     final json = await _apiClient.post('/api/projects/$projectId/notes', body: {
       'text': text,
+      'taskAt': taskAt.toUtc().toIso8601String(),
       'notifyAt': notifyAt.toUtc().toIso8601String(),
     });
     return ProjectNote.fromJson(json as Map<String, dynamic>);
   }
 
-  Future<ProjectNote> updateNote(String noteId, {required String text, required DateTime notifyAt}) async {
+  Future<ProjectNote> updateNote(
+    String noteId, {
+    required String text,
+    required DateTime taskAt,
+    required DateTime notifyAt,
+  }) async {
     final json = await _apiClient.put('/api/projects/notes/$noteId', body: {
       'text': text,
+      'taskAt': taskAt.toUtc().toIso8601String(),
       'notifyAt': notifyAt.toUtc().toIso8601String(),
     });
     return ProjectNote.fromJson(json as Map<String, dynamic>);

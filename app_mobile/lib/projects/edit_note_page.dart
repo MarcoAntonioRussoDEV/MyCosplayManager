@@ -20,6 +20,7 @@ class EditNotePage extends StatefulWidget {
 class _EditNotePageState extends State<EditNotePage> {
   late final ProjectRepository _repository;
   final _textController = TextEditingController();
+  late DateTime _taskAt;
   late DateTime _notifyAt;
   bool _saving = false;
   String? _error;
@@ -31,7 +32,9 @@ class _EditNotePageState extends State<EditNotePage> {
     final note = widget.note;
     // Default: tra 5 minuti, comodo per testare subito una notifica senza dover
     // pensare a una data futura specifica.
-    _notifyAt = note?.notifyAt ?? DateTime.now().add(const Duration(minutes: 5));
+    final defaultAt = DateTime.now().add(const Duration(minutes: 5));
+    _taskAt = note?.taskAt ?? defaultAt;
+    _notifyAt = note?.notifyAt ?? defaultAt;
     if (note != null) _textController.text = note.text;
   }
 
@@ -41,25 +44,21 @@ class _EditNotePageState extends State<EditNotePage> {
     super.dispose();
   }
 
-  Future<void> _pickDate() async {
+  Future<void> _pickDate(DateTime current, void Function(DateTime) onPicked) async {
     final picked = await showDatePicker(
       context: context,
-      initialDate: _notifyAt,
+      initialDate: current,
       firstDate: DateTime.now().subtract(const Duration(days: 365)),
       lastDate: DateTime.now().add(const Duration(days: 365 * 3)),
     );
     if (picked == null) return;
-    setState(() {
-      _notifyAt = DateTime(picked.year, picked.month, picked.day, _notifyAt.hour, _notifyAt.minute);
-    });
+    onPicked(DateTime(picked.year, picked.month, picked.day, current.hour, current.minute));
   }
 
-  Future<void> _pickTime() async {
-    final picked = await showTimePicker(context: context, initialTime: TimeOfDay.fromDateTime(_notifyAt));
+  Future<void> _pickTime(DateTime current, void Function(DateTime) onPicked) async {
+    final picked = await showTimePicker(context: context, initialTime: TimeOfDay.fromDateTime(current));
     if (picked == null) return;
-    setState(() {
-      _notifyAt = DateTime(_notifyAt.year, _notifyAt.month, _notifyAt.day, picked.hour, picked.minute);
-    });
+    onPicked(DateTime(current.year, current.month, current.day, picked.hour, picked.minute));
   }
 
   Future<void> _save() async {
@@ -74,8 +73,10 @@ class _EditNotePageState extends State<EditNotePage> {
     });
     try {
       final note = widget.note == null
-          ? await _repository.addNote(widget.projectId, text: _textController.text.trim(), notifyAt: _notifyAt)
-          : await _repository.updateNote(widget.note!.id, text: _textController.text.trim(), notifyAt: _notifyAt);
+          ? await _repository.addNote(widget.projectId,
+              text: _textController.text.trim(), taskAt: _taskAt, notifyAt: _notifyAt)
+          : await _repository.updateNote(widget.note!.id,
+              text: _textController.text.trim(), taskAt: _taskAt, notifyAt: _notifyAt);
       if (mounted) Navigator.of(context).pop<ProjectNote>(note);
     } catch (e) {
       setState(() => _error = e is ApiException ? e.message : e.toString());
@@ -85,6 +86,36 @@ class _EditNotePageState extends State<EditNotePage> {
   }
 
   String _twoDigits(int n) => n.toString().padLeft(2, '0');
+
+  Widget _dateTimeRow({
+    required String dateLabel,
+    required String timeLabel,
+    required DateTime value,
+    required void Function(DateTime) onChanged,
+  }) {
+    return Row(
+      children: [
+        Expanded(
+          child: ListTile(
+            contentPadding: EdgeInsets.zero,
+            title: Text(dateLabel),
+            subtitle: Text('${value.year}-${_twoDigits(value.month)}-${_twoDigits(value.day)}'),
+            trailing: const Icon(Icons.calendar_today),
+            onTap: () => _pickDate(value, onChanged),
+          ),
+        ),
+        Expanded(
+          child: ListTile(
+            contentPadding: EdgeInsets.zero,
+            title: Text(timeLabel),
+            subtitle: Text('${_twoDigits(value.hour)}:${_twoDigits(value.minute)}'),
+            trailing: const Icon(Icons.access_time),
+            onTap: () => _pickTime(value, onChanged),
+          ),
+        ),
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -99,28 +130,22 @@ class _EditNotePageState extends State<EditNotePage> {
             autofocus: widget.note == null,
             decoration: InputDecoration(labelText: l10n.noteTextField),
           ),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              Expanded(
-                child: ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: Text(l10n.dueDateField),
-                  subtitle: Text('${_notifyAt.year}-${_twoDigits(_notifyAt.month)}-${_twoDigits(_notifyAt.day)}'),
-                  trailing: const Icon(Icons.calendar_today),
-                  onTap: _pickDate,
-                ),
-              ),
-              Expanded(
-                child: ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: Text(l10n.notifyTimeField),
-                  subtitle: Text('${_twoDigits(_notifyAt.hour)}:${_twoDigits(_notifyAt.minute)}'),
-                  trailing: const Icon(Icons.access_time),
-                  onTap: _pickTime,
-                ),
-              ),
-            ],
+          const SizedBox(height: 16),
+          Text(l10n.taskSectionLabel, style: Theme.of(context).textTheme.titleSmall),
+          _dateTimeRow(
+            dateLabel: l10n.taskDateField,
+            timeLabel: l10n.taskTimeField,
+            value: _taskAt,
+            onChanged: (v) => setState(() => _taskAt = v),
+          ),
+          const SizedBox(height: 16),
+          Text(l10n.notifySectionLabel, style: Theme.of(context).textTheme.titleSmall),
+          Text(l10n.notifyExplainer, style: Theme.of(context).textTheme.bodySmall),
+          _dateTimeRow(
+            dateLabel: l10n.dueDateField,
+            timeLabel: l10n.notifyTimeField,
+            value: _notifyAt,
+            onChanged: (v) => setState(() => _notifyAt = v),
           ),
           const SizedBox(height: 16),
           if (_error != null)

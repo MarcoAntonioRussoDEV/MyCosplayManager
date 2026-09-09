@@ -16,6 +16,11 @@ class BackendSwitcherPage extends StatefulWidget {
 class _BackendSwitcherPageState extends State<BackendSwitcherPage> {
   static const _presets = <({String label, String url, String? note})>[
     (
+      label: 'Server remoto (ocrama94)',
+      url: 'https://ocrama94.tplinkdns.com:8443',
+      note: 'Server esposto pubblicamente (HTTPS), per test fuori dalla rete locale',
+    ),
+    (
       label: 'Locale (adb reverse)',
       url: 'http://localhost:8080',
       note: 'adb reverse tcp:8080 tcp:8080, dispositivo USB',
@@ -34,6 +39,12 @@ class _BackendSwitcherPageState extends State<BackendSwitcherPage> {
   void initState() {
     super.initState();
     _selected = context.read<AuthService>().baseUrl;
+    if (_selected == 'http://localhost:8080') {
+      // Ancora sul default compilato (nessuna scelta esplicita salvata finora):
+      // preseleziona il server remoto, comodo per chi installa l'app per la
+      // prima volta (es. il socio) e non deve sapere quale voce scegliere.
+      _selected = _presets.first.url;
+    }
     final presetUrls = _presets.map((p) => p.url).toSet();
     if (!presetUrls.contains(_selected)) {
       _custom = true;

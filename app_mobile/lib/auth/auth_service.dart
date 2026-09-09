@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import '../core/api_client.dart';
+import '../core/push_notification_service.dart';
 
 class AuthUser {
   final String userId;
@@ -33,6 +36,7 @@ class AuthService extends ChangeNotifier {
     serverClientId: const String.fromEnvironment('GOOGLE_SERVER_CLIENT_ID'),
   );
   late final ApiClient _apiClient;
+  late final PushNotificationService _pushNotificationService;
 
   String? _token;
   AuthUser? _currentUser;
@@ -40,6 +44,7 @@ class AuthService extends ChangeNotifier {
 
   AuthService() {
     _apiClient = ApiClient(tokenProvider: () async => _token, onUnauthorized: () async => await signOut());
+    _pushNotificationService = PushNotificationService(_apiClient);
   }
 
   bool get isLoggedIn => _token != null;
@@ -54,6 +59,7 @@ class AuthService extends ChangeNotifier {
     _token = await _secureStorage.read(key: _tokenKey);
     _initialized = true;
     notifyListeners();
+    if (_token != null) unawaited(_pushNotificationService.registerDevice());
   }
 
   /// Cambia a runtime il backend a cui punta l'app (vedi core/api_client.dart), lo
@@ -81,9 +87,11 @@ class AuthService extends ChangeNotifier {
     _currentUser = AuthUser.fromJson(response as Map<String, dynamic>);
     await _secureStorage.write(key: _tokenKey, value: _token);
     notifyListeners();
+    unawaited(_pushNotificationService.registerDevice());
   }
 
   Future<void> signOut() async {
+    await _pushNotificationService.unregisterDevice();
     _token = null;
     _currentUser = null;
     await _secureStorage.delete(key: _tokenKey);

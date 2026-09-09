@@ -579,7 +579,7 @@ abstract class AppLocalizations {
   /// No description provided for @dueDateField.
   ///
   /// In en, this message translates to:
-  /// **'Due date'**
+  /// **'Notification date'**
   String get dueDateField;
 
   /// No description provided for @notifyDaysBeforeField.
@@ -603,8 +603,38 @@ abstract class AppLocalizations {
   /// No description provided for @notifyTimeField.
   ///
   /// In en, this message translates to:
-  /// **'Time'**
+  /// **'Notification time'**
   String get notifyTimeField;
+
+  /// No description provided for @notifyExplainer.
+  ///
+  /// In en, this message translates to:
+  /// **'You will get a push notification at this date and time.'**
+  String get notifyExplainer;
+
+  /// No description provided for @taskDateField.
+  ///
+  /// In en, this message translates to:
+  /// **'Task date'**
+  String get taskDateField;
+
+  /// No description provided for @taskTimeField.
+  ///
+  /// In en, this message translates to:
+  /// **'Task time'**
+  String get taskTimeField;
+
+  /// No description provided for @taskSectionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'When it needs doing'**
+  String get taskSectionLabel;
+
+  /// No description provided for @notifySectionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder'**
+  String get notifySectionLabel;
 }
 
 class _AppLocalizationsDelegate

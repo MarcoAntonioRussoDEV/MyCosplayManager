@@ -4,6 +4,7 @@ backend/target/
 backend/secrets/
 backend/uploads/
 /secrets/
+app_mobile/android/app/google-services.json
 .claude/*.lock
 *.env
 !.env.example

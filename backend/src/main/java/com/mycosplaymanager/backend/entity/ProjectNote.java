@@ -17,10 +17,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/** Nota/task schedulata su un progetto (es. "16/09 18:00: seconda mano di primer"), con
- * notifica push a un istante preciso scelto dall'utente (data+ora+minuto). Notifica one-shot
- * (flag `notified`, non un dedupe giornaliero come ExpiryNotificationScheduler): parte una
- * volta sola al raggiungimento di notifyAt, non ogni giorno finche' non e' passata. */
+/** Nota/task schedulata su un progetto (es. "16/09 18:00: seconda mano di primer"). Due
+ * istanti indipendenti: taskAt (quando va svolto il compito) e notifyAt (quando arriva il
+ * promemoria push, non necessariamente lo stesso momento — es. compito il 30/09 10:00,
+ * notifica la sera prima). Notifica one-shot (flag `notified`, non un dedupe giornaliero
+ * come ExpiryNotificationScheduler): parte una volta sola al raggiungimento di notifyAt. */
 @Entity
 @Table(name = "project_notes")
 @Getter
@@ -38,6 +39,9 @@ public class ProjectNote {
 
     @Column(nullable = false)
     private String text;
+
+    @Column(name = "task_at", nullable = false)
+    private Instant taskAt;
 
     @Column(name = "notify_at", nullable = false)
     private Instant notifyAt;

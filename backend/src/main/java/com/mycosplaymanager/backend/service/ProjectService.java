@@ -169,6 +169,7 @@ public class ProjectService {
         ProjectNote note = new ProjectNote();
         note.setProject(project);
         note.setText(request.text());
+        note.setTaskAt(request.taskAt());
         note.setNotifyAt(request.notifyAt());
         note.setCreatedBy(creator);
         return ProjectNoteResponse.from(projectNoteRepository.save(note));
@@ -178,6 +179,7 @@ public class ProjectService {
     public ProjectNoteResponse updateNote(UUID noteId, UUID teamId, UpdateProjectNoteRequest request) {
         ProjectNote note = findOwnedNote(noteId, teamId);
         note.setText(request.text());
+        note.setTaskAt(request.taskAt());
         note.setNotifyAt(request.notifyAt());
         // L'istante e' cambiato: la notifica one-shot puo' ripartire per il nuovo orario.
         note.setNotified(false);

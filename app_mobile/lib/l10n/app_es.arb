@@ -79,9 +79,14 @@
     "addNote": "Anadir nota",
     "editNote": "Editar nota",
     "noteTextField": "Que hay que hacer",
-    "dueDateField": "Fecha limite",
+    "dueDateField": "Fecha de notificacion",
     "notifyDaysBeforeField": "Aviso (dias antes)",
     "noNotes": "Aun no hay notas para este proyecto.",
     "deleteNoteConfirm": "Eliminar esta nota?",
-    "notifyTimeField": "Hora"
+    "notifyTimeField": "Hora de notificacion",
+    "notifyExplainer": "Recibiras una notificacion push en esta fecha y hora.",
+    "taskDateField": "Fecha de la tarea",
+    "taskTimeField": "Hora de la tarea",
+    "taskSectionLabel": "Cuando hay que hacerlo",
+    "notifySectionLabel": "Recordatorio"
 }

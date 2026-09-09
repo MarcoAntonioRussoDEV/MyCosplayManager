@@ -79,9 +79,14 @@
     "addNote": "Add note",
     "editNote": "Edit note",
     "noteTextField": "What to do",
-    "dueDateField": "Due date",
+    "dueDateField": "Notification date",
     "notifyDaysBeforeField": "Notify (days before)",
     "noNotes": "No notes yet for this project.",
     "deleteNoteConfirm": "Delete this note?",
-    "notifyTimeField": "Time"
+    "notifyTimeField": "Notification time",
+    "notifyExplainer": "You will get a push notification at this date and time.",
+    "taskDateField": "Task date",
+    "taskTimeField": "Task time",
+    "taskSectionLabel": "When it needs doing",
+    "notifySectionLabel": "Reminder"
 }

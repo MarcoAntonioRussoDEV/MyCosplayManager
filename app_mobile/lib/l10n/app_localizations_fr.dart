@@ -251,7 +251,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get noteTextField => 'Quoi faire';
 
   @override
-  String get dueDateField => 'Echeance';
+  String get dueDateField => 'Date de notification';
 
   @override
   String get notifyDaysBeforeField => 'Rappel (jours avant)';
@@ -263,5 +263,21 @@ class AppLocalizationsFr extends AppLocalizations {
   String get deleteNoteConfirm => 'Supprimer cette note ?';
 
   @override
-  String get notifyTimeField => 'Heure';
+  String get notifyTimeField => 'Heure de notification';
+
+  @override
+  String get notifyExplainer =>
+      'Vous recevrez une notification push a cette date et heure.';
+
+  @override
+  String get taskDateField => 'Date de la tache';
+
+  @override
+  String get taskTimeField => 'Heure de la tache';
+
+  @override
+  String get taskSectionLabel => 'Quand la faire';
+
+  @override
+  String get notifySectionLabel => 'Rappel';
 }
