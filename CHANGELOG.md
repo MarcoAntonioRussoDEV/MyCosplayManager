@@ -11,6 +11,29 @@ Fino ad allora ogni modifica si accumula in **[Non rilasciato]**.
 
 ## [Non rilasciato] — 0.1.0-SNAPSHOT
 
+### Backend/Dashboard — whitelist admin in DB invece che in env var
+
+- Nuova tabella `admin_emails` (migration `V9`), seed con l'unico admin
+  esistente. `AdminAllowlist` ora legge dal DB invece che da
+  `ADMIN_ALLOWED_EMAILS` (rimossa da `.env`/`docker-compose.yml`/
+  `application.yml`) — aggiungere/rimuovere un admin non richiede piu'
+  modificare `.env` + riavviare il backend.
+- `GET/POST /api/admin/admins`, `DELETE /api/admin/admins/{id}` + nuova
+  pagina "Admin" in dashboard. Protezione: non si puo' rimuovere l'ultimo
+  admin rimasto (409), altrimenti nessuno potrebbe piu' accedere alla
+  dashboard per ripristinarlo.
+
+### Fix: pagina "Backend (dev)" — bottone bloccato in loading per sempre
+
+- Dopo un salvataggio riuscito, `setState(() => _saving = false)` non
+  veniva mai chiamato (il commento assumeva che `app.dart` tornasse da solo
+  alla LoginPage dopo il logout, ma lo stack di navigazione restava
+  impilato sopra) — il bottone "Salva e accedi" restava con lo spinner per
+  sempre, la pagina sembrava bloccata. Fix: `Navigator.popUntil` esplicito
+  fino alla route radice dopo il salvataggio.
+- Grafica ripulita: opzioni in card, testo descrittivo piu' piccolo/attenuato
+  invece di sembrare piazzato a caso.
+
 ### Fix: DDNS TP-Link incompatibile con Let's Encrypt, passato a No-IP
 
 - Causa: i nameserver di TP-Link DDNS non supportano TCP ne' la
