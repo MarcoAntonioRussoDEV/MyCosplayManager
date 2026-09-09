@@ -105,7 +105,7 @@ abstract class AppLocalizations {
   /// No description provided for @appTitle.
   ///
   /// In en, this message translates to:
-  /// **'Cosplay Inventory'**
+  /// **'My Cosplay Manager'**
   String get appTitle;
 
   /// No description provided for @loginSubtitle.
@@ -377,6 +377,234 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This cannot be undone.'**
   String get confirmDeleteMessage;
+
+  /// No description provided for @navProjects.
+  ///
+  /// In en, this message translates to:
+  /// **'Projects'**
+  String get navProjects;
+
+  /// No description provided for @projectsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No projects yet. Tap + to create one.'**
+  String get projectsEmpty;
+
+  /// No description provided for @addProject.
+  ///
+  /// In en, this message translates to:
+  /// **'New project'**
+  String get addProject;
+
+  /// No description provided for @editProject.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit project'**
+  String get editProject;
+
+  /// No description provided for @projectName.
+  ///
+  /// In en, this message translates to:
+  /// **'Project name'**
+  String get projectName;
+
+  /// No description provided for @projectDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get projectDescription;
+
+  /// No description provided for @laborHours.
+  ///
+  /// In en, this message translates to:
+  /// **'Labor hours'**
+  String get laborHours;
+
+  /// No description provided for @laborRatePerHour.
+  ///
+  /// In en, this message translates to:
+  /// **'Hourly rate (€/h)'**
+  String get laborRatePerHour;
+
+  /// No description provided for @materials.
+  ///
+  /// In en, this message translates to:
+  /// **'Materials'**
+  String get materials;
+
+  /// No description provided for @addMaterial.
+  ///
+  /// In en, this message translates to:
+  /// **'Add material'**
+  String get addMaterial;
+
+  /// No description provided for @materialsCost.
+  ///
+  /// In en, this message translates to:
+  /// **'Materials cost'**
+  String get materialsCost;
+
+  /// No description provided for @laborCost.
+  ///
+  /// In en, this message translates to:
+  /// **'Labor cost'**
+  String get laborCost;
+
+  /// No description provided for @totalCost.
+  ///
+  /// In en, this message translates to:
+  /// **'Total cost'**
+  String get totalCost;
+
+  /// No description provided for @selectFromInventory.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick from inventory'**
+  String get selectFromInventory;
+
+  /// No description provided for @noInventoryItems.
+  ///
+  /// In en, this message translates to:
+  /// **'No inventory items to use as a material.'**
+  String get noInventoryItems;
+
+  /// No description provided for @deleteProject.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete project?'**
+  String get deleteProject;
+
+  /// No description provided for @confirmDeleteProjectMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Its materials will be deleted too. This cannot be undone.'**
+  String get confirmDeleteProjectMessage;
+
+  /// No description provided for @deleteMaterial.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove material?'**
+  String get deleteMaterial;
+
+  /// No description provided for @estimatedFromCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Estimated from category'**
+  String get estimatedFromCategory;
+
+  /// No description provided for @fromInventoryTab.
+  ///
+  /// In en, this message translates to:
+  /// **'From inventory'**
+  String get fromInventoryTab;
+
+  /// No description provided for @searchProductTab.
+  ///
+  /// In en, this message translates to:
+  /// **'Search product'**
+  String get searchProductTab;
+
+  /// No description provided for @searchProductHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by name or brand'**
+  String get searchProductHint;
+
+  /// No description provided for @noSearchResults.
+  ///
+  /// In en, this message translates to:
+  /// **'No product found'**
+  String get noSearchResults;
+
+  /// No description provided for @priceRangeInCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Typical price in this category'**
+  String get priceRangeInCategory;
+
+  /// No description provided for @fieldNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Note'**
+  String get fieldNote;
+
+  /// No description provided for @productOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Product (optional)'**
+  String get productOptional;
+
+  /// No description provided for @noProductChosen.
+  ///
+  /// In en, this message translates to:
+  /// **'None - estimated from category range'**
+  String get noProductChosen;
+
+  /// No description provided for @noProductOption.
+  ///
+  /// In en, this message translates to:
+  /// **'No specific product'**
+  String get noProductOption;
+
+  /// No description provided for @chooseCategoryFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a category first'**
+  String get chooseCategoryFirst;
+
+  /// No description provided for @notesSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get notesSection;
+
+  /// No description provided for @addNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Add note'**
+  String get addNote;
+
+  /// No description provided for @editNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit note'**
+  String get editNote;
+
+  /// No description provided for @noteTextField.
+  ///
+  /// In en, this message translates to:
+  /// **'What to do'**
+  String get noteTextField;
+
+  /// No description provided for @dueDateField.
+  ///
+  /// In en, this message translates to:
+  /// **'Due date'**
+  String get dueDateField;
+
+  /// No description provided for @notifyDaysBeforeField.
+  ///
+  /// In en, this message translates to:
+  /// **'Notify (days before)'**
+  String get notifyDaysBeforeField;
+
+  /// No description provided for @noNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'No notes yet for this project.'**
+  String get noNotes;
+
+  /// No description provided for @deleteNoteConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this note?'**
+  String get deleteNoteConfirm;
+
+  /// No description provided for @notifyTimeField.
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get notifyTimeField;
 }
 
 class _AppLocalizationsDelegate

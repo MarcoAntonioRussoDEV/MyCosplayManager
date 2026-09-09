@@ -52,7 +52,7 @@ export function LoginPage() {
   return (
     <div className="login-page">
       <div className="card login-card" style={{ textAlign: 'center' }}>
-        <h1 style={{ fontSize: '1.3rem' }}>Cosplay Inventory Admin</h1>
+        <h1 style={{ fontSize: '1.3rem' }}>My Cosplay Manager Admin</h1>
         <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>
           Accesso riservato agli account autorizzati.
         </p>

@@ -14,8 +14,10 @@ Roadmap del progetto. Dettagli implementativi e fix in [CHANGELOG.md](CHANGELOG.
 ## Fase 2 (dopo l'MVP)
 
 - [ ] **Mappa negozi** — segnare su una mappa dove si e' comprato un prodotto e a che prezzo (funzionalita' secondaria dal backlog).
-- [ ] **Progetti cosplay + calcolatore prezzo** — entita' Progetto (nome/foto/descrizione) con prodotti collegati; calcolo costo per prodotto (o range di categoria) + manodopera (€/h).
-- [ ] **Monetizzazione** — ADS, funzionalita' premium (limiti free/premium, rimozione ADS).
+- [x] **Progetti cosplay + calcolatore prezzo (backend + app mobile)** — entita' Progetto con materiali ancorati alla categoria scelta dall'utente (non al prodotto: prodotto/inventory item restano facoltativi, solo per prezzo reale/tracciabilita'), calcolo costo materiali (stima da range categoria se prezzo assente) + manodopera. UI app mobile completa (lista/dettaglio/edit progetto, aggiunta materiale con combobox categoria + nota + selettore prodotto filtrato per categoria). Manca solo l'eventuale UI dashboard (non richiesta finora, opzionale).
+- [ ] **Monetizzazione** — ADS, funzionalita' premium (limiti free/premium, rimozione ADS). Struttura societaria/fiscale ancora da definire (P.IVA/SAS) prima di collegare AdMob/Play Console a un payments profile reale.
+- [x] **Backend switcher a runtime (app mobile)** — cambio ambiente (locale/LAN/custom) senza rebuild, come Unwaste, raggiungibile anche dalla LoginPage prima del login.
+- [x] **Note schedulate per progetto** — todo con data + preavviso notifica configurabile per nota, notifica push a tutto il team (log-only finche' Firebase non e' configurato), checkbox fatto/da fare.
 
 ## Note
 

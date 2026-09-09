@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../auth/auth_service.dart';
-import '../core/models/category.dart';
 import '../core/models/product.dart';
 import '../l10n/app_localizations.dart';
 import 'barcode_scan_page.dart';
@@ -23,8 +22,6 @@ class _AddItemPageState extends State<AddItemPage> {
   _Step _step = _Step.chooseInput;
   String? _barcode;
   Product? _foundProduct;
-  List<Category> _categories = [];
-  String? _selectedCategoryId;
   bool _saving = false;
   String? _error;
 
@@ -80,7 +77,6 @@ class _AddItemPageState extends State<AddItemPage> {
           _step = _Step.existingProduct;
         });
       } else {
-        _categories = await _repository.listCategories();
         setState(() {
           _nameController.text = '';
           _step = _Step.newProduct;
@@ -130,7 +126,6 @@ class _AddItemPageState extends State<AddItemPage> {
         barcode: _barcode!,
         name: _nameController.text,
         brand: _brandController.text,
-        categoryId: _selectedCategoryId,
         daysAfterOpening: int.tryParse(_daysAfterOpeningController.text),
       );
       await _repository.createItem(
@@ -200,15 +195,6 @@ class _AddItemPageState extends State<AddItemPage> {
               TextField(controller: _nameController, decoration: InputDecoration(labelText: l10n.fieldName)),
               const SizedBox(height: 8),
               TextField(controller: _brandController, decoration: InputDecoration(labelText: l10n.fieldBrand)),
-              const SizedBox(height: 8),
-              DropdownButtonFormField<String>(
-                initialValue: _selectedCategoryId,
-                decoration: InputDecoration(labelText: l10n.fieldCategory),
-                items: _categories
-                    .map((c) => DropdownMenuItem(value: c.id, child: Text(c.nameFor(Localizations.localeOf(context).languageCode))))
-                    .toList(),
-                onChanged: (value) => setState(() => _selectedCategoryId = value),
-              ),
               const SizedBox(height: 8),
               TextField(
                 controller: _daysAfterOpeningController,

@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../auth/auth_service.dart';
+import '../core/env.dart';
 import '../core/locale_controller.dart';
 import '../l10n/app_localizations.dart';
+import 'backend_switcher_page.dart';
 import 'settings_repository.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -109,6 +111,17 @@ class _SettingsPageState extends State<SettingsPage> {
                   subtitle: Text('${l10n.teamInviteCode}: ${_team!.inviteCode}'),
                   trailing: TextButton(onPressed: _joinTeamDialog, child: const Text('Join')),
                 ),
+              if (enableTestBackendSwitcher) ...[
+                const Divider(),
+                ListTile(
+                  leading: const Icon(Icons.dns_outlined),
+                  title: const Text('Backend (dev)'),
+                  subtitle: Text(context.read<AuthService>().baseUrl),
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const BackendSwitcherPage()),
+                  ),
+                ),
+              ],
               const Divider(),
               ListTile(
                 leading: const Icon(Icons.logout),

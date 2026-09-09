@@ -9,7 +9,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appTitle => 'Cosplay Inventory';
+  String get appTitle => 'My Cosplay Manager';
 
   @override
   String get loginSubtitle => 'Manage your cosplay materials inventory';
@@ -145,4 +145,119 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get confirmDeleteMessage => 'This cannot be undone.';
+
+  @override
+  String get navProjects => 'Projects';
+
+  @override
+  String get projectsEmpty => 'No projects yet. Tap + to create one.';
+
+  @override
+  String get addProject => 'New project';
+
+  @override
+  String get editProject => 'Edit project';
+
+  @override
+  String get projectName => 'Project name';
+
+  @override
+  String get projectDescription => 'Description';
+
+  @override
+  String get laborHours => 'Labor hours';
+
+  @override
+  String get laborRatePerHour => 'Hourly rate (€/h)';
+
+  @override
+  String get materials => 'Materials';
+
+  @override
+  String get addMaterial => 'Add material';
+
+  @override
+  String get materialsCost => 'Materials cost';
+
+  @override
+  String get laborCost => 'Labor cost';
+
+  @override
+  String get totalCost => 'Total cost';
+
+  @override
+  String get selectFromInventory => 'Pick from inventory';
+
+  @override
+  String get noInventoryItems => 'No inventory items to use as a material.';
+
+  @override
+  String get deleteProject => 'Delete project?';
+
+  @override
+  String get confirmDeleteProjectMessage =>
+      'Its materials will be deleted too. This cannot be undone.';
+
+  @override
+  String get deleteMaterial => 'Remove material?';
+
+  @override
+  String get estimatedFromCategory => 'Estimated from category';
+
+  @override
+  String get fromInventoryTab => 'From inventory';
+
+  @override
+  String get searchProductTab => 'Search product';
+
+  @override
+  String get searchProductHint => 'Search by name or brand';
+
+  @override
+  String get noSearchResults => 'No product found';
+
+  @override
+  String get priceRangeInCategory => 'Typical price in this category';
+
+  @override
+  String get fieldNote => 'Note';
+
+  @override
+  String get productOptional => 'Product (optional)';
+
+  @override
+  String get noProductChosen => 'None - estimated from category range';
+
+  @override
+  String get noProductOption => 'No specific product';
+
+  @override
+  String get chooseCategoryFirst => 'Choose a category first';
+
+  @override
+  String get notesSection => 'Notes';
+
+  @override
+  String get addNote => 'Add note';
+
+  @override
+  String get editNote => 'Edit note';
+
+  @override
+  String get noteTextField => 'What to do';
+
+  @override
+  String get dueDateField => 'Due date';
+
+  @override
+  String get notifyDaysBeforeField => 'Notify (days before)';
+
+  @override
+  String get noNotes => 'No notes yet for this project.';
+
+  @override
+  String get deleteNoteConfirm => 'Delete this note?';
+
+  @override
+  String get notifyTimeField => 'Time';
 }

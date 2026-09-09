@@ -1,10 +1,14 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 
-/// Backend locale di default: su emulatore Android, sovrascrivere con
-/// --dart-define=API_BASE_URL=http://10.0.2.2:8080 (localhost dell'host, non del guest).
-const String apiBaseUrl = String.fromEnvironment('API_BASE_URL', defaultValue: 'http://localhost:8080');
+/// Backend a cui punta l'app. Default da build (su emulatore Android, sovrascrivere con
+/// --dart-define=API_BASE_URL=http://10.0.2.2:8080, localhost dell'host non del guest),
+/// ma NON const: AuthService lo sovrascrive a runtime con l'eventuale override salvato
+/// in secure storage (vedi AuthService.setBackendUrl), per cambiare ambiente senza rebuild.
+String apiBaseUrl = const String.fromEnvironment('API_BASE_URL', defaultValue: 'http://localhost:8080');
 
 class ApiException implements Exception {
   final int statusCode;
@@ -54,9 +58,23 @@ class ApiClient {
     return _handle(response);
   }
 
-  Future<void> delete(String path) async {
+  Future<dynamic> delete(String path) async {
     final response = await http.delete(_uri(path), headers: await _headers());
-    await _handle(response);
+    return _handle(response);
+  }
+
+  Future<Map<String, dynamic>> postMultipart(String path, File file, String contentType) async {
+    final token = await tokenProvider();
+    final request = http.MultipartRequest('POST', _uri(path));
+    if (token != null) request.headers['Authorization'] = 'Bearer $token';
+    request.files.add(await http.MultipartFile.fromPath(
+      'file',
+      file.path,
+      contentType: MediaType.parse(contentType),
+    ));
+    final streamed = await request.send();
+    final response = await http.Response.fromStream(streamed);
+    return await _handle(response) as Map<String, dynamic>;
   }
 
   Future<dynamic> _handle(http.Response response) async {

@@ -1,5 +1,6 @@
 import '../core/api_client.dart';
 import '../core/models/category.dart';
+import '../core/models/category_price_range.dart';
 import '../core/models/inventory_item.dart';
 import '../core/models/product.dart';
 
@@ -22,6 +23,21 @@ class InventoryRepository {
       if (e.statusCode == 404) return null;
       rethrow;
     }
+  }
+
+  /// Ricerca libera nel catalogo crowdsourced per nome/marca (non filtrata per team),
+  /// opzionalmente ristretta a una categoria.
+  Future<List<Product>> searchProducts(String query, {String? categoryId}) async {
+    final json = await _apiClient.get('/api/products/search', query: {
+      if (query.isNotEmpty) 'q': query,
+      if (categoryId != null) 'categoryId': categoryId,
+    }) as List;
+    return json.map((e) => Product.fromJson(e as Map<String, dynamic>)).toList();
+  }
+
+  Future<CategoryPriceRange> categoryPriceRange(String categoryId) async {
+    final json = await _apiClient.get('/api/categories/$categoryId/price-range');
+    return CategoryPriceRange.fromJson(json as Map<String, dynamic>);
   }
 
   Future<Product> createProduct({

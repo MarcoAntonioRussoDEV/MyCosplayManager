@@ -24,6 +24,7 @@ class AuthUser {
 /// viene salvato in secure storage e riusato finche' non scade o l'utente esce.
 class AuthService extends ChangeNotifier {
   static const _tokenKey = 'auth_token';
+  static const _backendUrlKey = 'backend_url';
   final _secureStorage = const FlutterSecureStorage();
   // Client OAuth "Web" (Google Cloud Console), non quello Android: e' l'audience che il
   // backend verifica in GoogleTokenVerifierService. Serve anche se si accede da Android.
@@ -45,11 +46,25 @@ class AuthService extends ChangeNotifier {
   bool get initialized => _initialized;
   AuthUser? get currentUser => _currentUser;
   ApiClient get apiClient => _apiClient;
+  String get baseUrl => apiBaseUrl;
 
   Future<void> restoreSession() async {
+    final savedUrl = await _secureStorage.read(key: _backendUrlKey);
+    if (savedUrl != null && savedUrl.isNotEmpty) apiBaseUrl = savedUrl;
     _token = await _secureStorage.read(key: _tokenKey);
     _initialized = true;
     notifyListeners();
+  }
+
+  /// Cambia a runtime il backend a cui punta l'app (vedi core/api_client.dart), lo
+  /// persiste in secure storage e forza il logout: il token attuale non e' valido
+  /// sull'altro server (utenti/team diversi tra ambienti).
+  Future<void> setBackendUrl(String url) async {
+    var normalized = url.trim();
+    if (normalized.endsWith('/')) normalized = normalized.substring(0, normalized.length - 1);
+    apiBaseUrl = normalized;
+    await _secureStorage.write(key: _backendUrlKey, value: normalized);
+    await signOut();
   }
 
   Future<void> signInWithGoogle() async {

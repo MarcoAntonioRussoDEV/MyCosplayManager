@@ -9,7 +9,7 @@ class AppLocalizationsFr extends AppLocalizations {
   AppLocalizationsFr([String locale = 'fr']) : super(locale);
 
   @override
-  String get appTitle => 'Cosplay Inventory';
+  String get appTitle => 'My Cosplay Manager';
 
   @override
   String get loginSubtitle => 'Gerez l\'inventaire de vos materiaux cosplay';
@@ -147,4 +147,121 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get confirmDeleteMessage => 'Cette action est irreversible.';
+
+  @override
+  String get navProjects => 'Projets';
+
+  @override
+  String get projectsEmpty =>
+      'Aucun projet pour l\'instant. Touchez + pour en creer un.';
+
+  @override
+  String get addProject => 'Nouveau projet';
+
+  @override
+  String get editProject => 'Modifier le projet';
+
+  @override
+  String get projectName => 'Nom du projet';
+
+  @override
+  String get projectDescription => 'Description';
+
+  @override
+  String get laborHours => 'Heures de travail';
+
+  @override
+  String get laborRatePerHour => 'Taux horaire (€/h)';
+
+  @override
+  String get materials => 'Materiaux';
+
+  @override
+  String get addMaterial => 'Ajouter un materiau';
+
+  @override
+  String get materialsCost => 'Cout des materiaux';
+
+  @override
+  String get laborCost => 'Cout de la main-d\'oeuvre';
+
+  @override
+  String get totalCost => 'Cout total';
+
+  @override
+  String get selectFromInventory => 'Choisir dans l\'inventaire';
+
+  @override
+  String get noInventoryItems =>
+      'Aucun produit dans l\'inventaire a utiliser comme materiau.';
+
+  @override
+  String get deleteProject => 'Supprimer le projet ?';
+
+  @override
+  String get confirmDeleteProjectMessage =>
+      'Ses materiaux seront aussi supprimes. Cette action est irreversible.';
+
+  @override
+  String get deleteMaterial => 'Retirer le materiau ?';
+
+  @override
+  String get estimatedFromCategory => 'Estime par categorie';
+
+  @override
+  String get fromInventoryTab => 'Depuis l\'inventaire';
+
+  @override
+  String get searchProductTab => 'Rechercher un produit';
+
+  @override
+  String get searchProductHint => 'Rechercher par nom ou marque';
+
+  @override
+  String get noSearchResults => 'Aucun produit trouve';
+
+  @override
+  String get priceRangeInCategory => 'Prix habituel dans cette categorie';
+
+  @override
+  String get fieldNote => 'Note';
+
+  @override
+  String get productOptional => 'Produit (optionnel)';
+
+  @override
+  String get noProductChosen => 'Aucun - estime par la categorie';
+
+  @override
+  String get noProductOption => 'Aucun produit specifique';
+
+  @override
+  String get chooseCategoryFirst => 'Choisissez d\'abord une categorie';
+
+  @override
+  String get notesSection => 'Notes';
+
+  @override
+  String get addNote => 'Ajouter une note';
+
+  @override
+  String get editNote => 'Modifier la note';
+
+  @override
+  String get noteTextField => 'Quoi faire';
+
+  @override
+  String get dueDateField => 'Echeance';
+
+  @override
+  String get notifyDaysBeforeField => 'Rappel (jours avant)';
+
+  @override
+  String get noNotes => 'Aucune note pour ce projet pour l\'instant.';
+
+  @override
+  String get deleteNoteConfirm => 'Supprimer cette note ?';
+
+  @override
+  String get notifyTimeField => 'Heure';
 }

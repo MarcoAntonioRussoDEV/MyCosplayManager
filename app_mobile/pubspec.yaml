@@ -1,5 +1,5 @@
-name: app_mobile
-description: "A new Flutter project."
+name: my_cosplay_manager
+description: "My Cosplay Manager - gestione inventario materiali e progetti cosplay."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -38,6 +38,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   intl: any
   http: ^1.2.2
+  http_parser: ^4.0.2
   flutter_secure_storage: ^9.2.2
   google_sign_in: ^6.2.2
   mobile_scanner: ^6.0.2

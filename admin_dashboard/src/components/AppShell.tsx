@@ -8,6 +8,7 @@ const NAV_ITEMS = [
   { to: '/teams', label: 'Team', icon: '🧑‍🤝‍🧑' },
   { to: '/products', label: 'Prodotti', icon: '📦' },
   { to: '/categories', label: 'Categorie', icon: '🏷️' },
+  { to: '/notifications', label: 'Notifiche', icon: '🔔' },
 ]
 
 export function AppShell({ children }: { children: ReactNode }) {
@@ -32,7 +33,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       </nav>
       <div className="app-main">
         <header className="app-topbar">
-          <h1>Cosplay Inventory Admin</h1>
+          <h1>My Cosplay Manager Admin</h1>
           <button className="btn secondary" onClick={logout} aria-label={`Esci (${email})`}>
             Esci
           </button>

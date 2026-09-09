@@ -16,9 +16,9 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       manifest: {
-        name: 'Cosplay Inventory Admin',
+        name: 'My Cosplay Manager Admin',
         short_name: 'CI Admin',
-        description: 'Dashboard di amministrazione Cosplay Inventory',
+        description: 'Dashboard di amministrazione My Cosplay Manager',
         start_url: '/',
         scope: '/',
         display: 'standalone',

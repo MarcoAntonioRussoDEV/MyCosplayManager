@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../inventory/inventory_list_page.dart';
 import '../l10n/app_localizations.dart';
+import '../projects/projects_list_page.dart';
 import '../settings/settings_page.dart';
 import '../shopping_list/shopping_list_page.dart';
 
@@ -21,7 +22,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: IndexedStack(
         index: _index,
-        children: const [InventoryListPage(), ShoppingListPage(), SettingsPage()],
+        children: const [InventoryListPage(), ShoppingListPage(), ProjectsListPage(), SettingsPage()],
       ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _index,
@@ -29,6 +30,7 @@ class _HomePageState extends State<HomePage> {
         destinations: [
           NavigationDestination(icon: const Icon(Icons.inventory_2_outlined), label: l10n.navInventory),
           NavigationDestination(icon: const Icon(Icons.shopping_cart_outlined), label: l10n.navShoppingList),
+          NavigationDestination(icon: const Icon(Icons.checkroom_outlined), label: l10n.navProjects),
           NavigationDestination(icon: const Icon(Icons.settings_outlined), label: l10n.navSettings),
         ],
       ),

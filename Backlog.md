@@ -1,6 +1,4 @@
-# Project Cosplay Inventory
-
-_nome provvisorio_
+# My Cosplay Manager
 
 ## Funzionalità principali
 

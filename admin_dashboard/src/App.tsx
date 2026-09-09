@@ -5,6 +5,7 @@ import { AppShell } from './components/AppShell'
 import { CategoriesPage } from './pages/CategoriesPage'
 import { DashboardPage } from './pages/DashboardPage'
 import { LoginPage } from './pages/LoginPage'
+import { NotificationsPage } from './pages/NotificationsPage'
 import { ProductsPage } from './pages/ProductsPage'
 import { TeamsPage } from './pages/TeamsPage'
 import { UsersPage } from './pages/UsersPage'
@@ -30,6 +31,7 @@ function AppRoutes() {
                 <Route path="/teams" element={<TeamsPage />} />
                 <Route path="/products" element={<ProductsPage />} />
                 <Route path="/categories" element={<CategoriesPage />} />
+                <Route path="/notifications" element={<NotificationsPage />} />
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </AppShell>

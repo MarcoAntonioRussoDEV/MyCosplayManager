@@ -288,6 +288,11 @@ button, input, select {
   font-size: 0.85rem;
 }
 
+.success-text {
+  color: var(--success);
+  font-size: 0.85rem;
+}
+
 /* ---------- Tabella responsive: vera <table> da tablet in su,
    stack di "card" per riga sotto i 640px (CSS-only, stesso markup). ---------- */
 

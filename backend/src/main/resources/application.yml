@@ -1,15 +1,15 @@
 spring:
     application:
-        name: cosplayinventory-backend
+        name: mycosplaymanager-backend
     autoconfigure:
         exclude:
             # JWT gestito interamente da JwtAuthenticationFilter: nessun
             # UserDetailsService/AuthenticationManager standard serve.
             - org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
     datasource:
-        url: ${DB_URL:jdbc:postgresql://localhost:5432/cosplayinventory}
-        username: ${DB_USERNAME:cosplayinventory}
-        password: ${DB_PASSWORD:cosplayinventory}
+        url: ${DB_URL:jdbc:postgresql://localhost:5432/mycosplaymanager}
+        username: ${DB_USERNAME:mycosplaymanager}
+        password: ${DB_PASSWORD:mycosplaymanager}
     jpa:
         hibernate:
             ddl-auto: validate
@@ -35,13 +35,14 @@ server:
         # questo il motivo di un ResponseStatusException non arriva mai al client.
         include-message: always
 
-cosplayinventory:
+mycosplaymanager:
     storage:
         upload-dir: ${UPLOAD_DIR:./uploads}
     notification:
         expiry-warning-days-default: 3
-        # Ogni 5 minuti: lo scheduler invia a ciascun utente solo se non gia' notificato oggi.
-        scan-cron: "0 */5 * * * *"
+        # Ogni minuto: serve precisione al minuto per le note progetto (notifyAt esatto);
+        # gli alert scadenza inventario restano dedupe-per-giorno quindi non spammano comunque.
+        scan-cron: "0 * * * * *"
         firebase-credentials-path: ${FIREBASE_CREDENTIALS_PATH:}
     jwt:
         # Dev-only default: sovrascrivere con JWT_SECRET in produzione (>= 32 byte, base64).

@@ -11,6 +11,90 @@ Fino ad allora ogni modifica si accumula in **[Non rilasciato]**.
 
 ## [Non rilasciato] — 0.1.0-SNAPSHOT
 
+### Backend/App mobile — note schedulate per progetto (todo con notifica push)
+
+- Nuova entita' `ProjectNote`: testo libero + istante preciso di notifica
+  (`notifyAt`, data+ora+minuto scelti dall'utente, non una scadenza con
+  preavviso in giorni — cambio deciso dopo la prima versione, per poter
+  testare rapidamente senza aspettare mezzanotte). Migration
+  `V6__project_notes.sql` poi `V7__project_notes_exact_notify_time.sql`.
+- `GET/POST /api/projects/{id}/notes`, `PUT /api/projects/notes/{noteId}`,
+  `PATCH /api/projects/notes/{noteId}/done`, `DELETE /api/projects/notes/{noteId}`.
+  Verificato via curl: create, list, toggle done, update (resetta il flag
+  notificata), delete.
+- `ProjectNoteNotificationScheduler`: notifica **one-shot** (flag `notified`,
+  non un dedupe giornaliero come `ExpiryNotificationScheduler`) — parte una
+  volta sola al raggiungimento di `notifyAt`, avvisa tutti i membri del team
+  del progetto. Cron portato da ogni 5 minuti a ogni minuto
+  (`cosplayinventory.notification.scan-cron`, poi rinominato) per la
+  precisione al minuto richiesta. Verificato end-to-end: nota schedulata 2
+  minuti nel futuro, confermato il flag `notified` scattare al momento giusto.
+- App: nuova sezione "Note" nel dettaglio progetto (checkbox fatto/da fare,
+  testo barrato se completata, data+ora, tap per modificare — data e ora
+  scelte con due picker separati), FAB del dettaglio progetto ora apre un
+  menu con due scelte ("Aggiungi materiale" / "Aggiungi nota") invece di
+  andare dritto al materiale.
+
+### Backend/Dashboard admin — notifica push "a comando"
+
+- `POST /api/admin/notifications/send` (titolo+testo liberi, email
+  destinatario opzionale — assente = broadcast a tutti i dispositivi
+  registrati): per testare la pipeline push senza aspettare uno scheduler.
+  Verificato via curl (token admin di dev): broadcast, email inesistente
+  (404), email valida.
+  Nuova pagina "Notifiche" nella dashboard (form titolo/testo/email).
+
+### Rename: Cosplay Inventory → My Cosplay Manager (nome definitivo)
+
+- Package Java `com.cosplayinventory.backend` → `com.mycosplaymanager.backend`
+  (109 file, `git mv` per preservare la history), `groupId` Maven aggiornato.
+  Namespace/`applicationId` Android `com.example.app_mobile` →
+  `com.mycosplaymanager.app` (richiede un NUOVO client OAuth Android su
+  Google Cloud Console, stesso SHA-1 del keystore debug — quello vecchio
+  resta registrato per il package precedente, Google Sign-In su Android non
+  funziona finche' non se ne crea uno nuovo). Nome pacchetto Dart
+  `app_mobile` → `my_cosplay_manager`. Cartella radice del repo rinominata
+  (`project_cosplay_inventory` → `my_cosplay_manager`).
+- Nome/utente/password del DB Postgres cambiati da `cosplayinventory` a
+  `mycosplaymanager` — richiede `docker compose down -v` (volume vecchio
+  incompatibile) e reseed dei dati di sviluppo.
+  Prefisso delle property Spring (`cosplayinventory.*` negli `@Value` e in
+  `application.yml`) rinominato a `mycosplaymanager.*`.
+  Titoli/branding aggiornati in app mobile, dashboard admin, `Backlog.md`.
+  Lasciati invariati (fatti reali esterni, non rinominabili da codice): l'id
+  del progetto Google Cloud (`cosplayinventory`, visibile nei file
+  `client_secret_*.json` scaricati dalla console) e i riferimenti storici
+  nel CHANGELOG a quell'id.
+
+### Fix critico: autenticazione rotta su TUTTI gli endpoint (mai emerso prima d'ora)
+
+- **Causa**: `JwtAuthenticationFilter` e `AdminJwtAuthenticationFilter` sono
+  `@Component`: Spring Boot li auto-registra ANCHE come filtri servlet
+  globali (un `FilterRegistrationBean` automatico per ogni bean `Filter`
+  trovato), in aggiunta alla copia inserita a mano nella security chain via
+  `addFilterBefore(...)`. La copia globale gira fuori dal ciclo di vita del
+  `SecurityContextHolderFilter` della chain vera: il `SecurityContext` che
+  imposta viene perso prima che il controller lo legga —
+  `@AuthenticationPrincipal` arriva sempre `null`, NPE a valle. Bug
+  presente fin dal primo commit (nessuno l'ha mai notato perche' nessun
+  endpoint autenticato era stato ritestato via curl dopo l'introduzione
+  della seconda security chain per l'admin — tutti i test precedenti
+  giravano su un'infrastruttura diversa/precedente).
+- **Fix**: due `@Bean FilterRegistrationBean<...>` con `setEnabled(false)`
+  in `SecurityConfig`, uno per filtro, per disattivare la registrazione
+  globale automatica e lasciare solo la copia dentro la security chain.
+- **Diagnosi**: niente per tentativi — isolato leggendo lo stack trace con
+  `logging.level.org.springframework.security=DEBUG` (mostra la lista
+  esatta di filtri per chain), poi confermato con log diretti dentro il
+  filtro e dentro il controller (`SecurityContextHolder.getContext()` letto
+  nei due punti, prima `Authenticated=true`, un attimo dopo `null` sullo
+  stesso thread) — build "baseline" dall'ultimo commit noto buono in un
+  git worktree separato per escludere cause ambientali prima di individuare
+  la vera causa nel codice.
+- Verificata l'intera matrice di isolamento token dopo il fix: token admin
+  su endpoint admin (200) e su endpoint utente (401), token utente su
+  endpoint utente (200) e su endpoint admin (401) — tutti e quattro corretti.
+
 ### Deploy
 
 - Milestone 6: `admin_dashboard` dockerizzata (build multi-stage Node→nginx,
@@ -184,3 +268,116 @@ Fino ad allora ogni modifica si accumula in **[Non rilasciato]**.
   Authorized JavaScript origins sul client Web (Google Cloud Console →
   Credentials) — non e' auto-permesso come sembrava dal solo rendering.
   Fatto: login Google end-to-end sulla dashboard confermato funzionante.
+
+### Backend — Upload foto e range prezzo categoria
+
+- `POST /api/uploads` (multipart, JPEG/PNG/WebP, riusa il limite 15MB gia'
+  configurato): salva su `UPLOAD_DIR` con nome random, torna `{url}`
+  relativo. `WebConfig` (`WebMvcConfigurer`) serve quei file sotto
+  `/uploads/**` — mancava del tutto, i campi `imageUrl` di prodotti/progetti
+  erano finora solo stringhe libere senza un modo reale di caricare un file.
+- `GET /api/categories/{id}/price-range` (min/max/avg dai prezzi segnalati
+  in `inventory_items`, calcolati al volo): usato dal calcolatore prezzo dei
+  Progetti quando un materiale non ha un costo esplicito.
+
+### Backend — Progetti cosplay + calcolatore prezzo
+
+- `projects` (nome/descrizione/foto/ore manodopera/tariffa oraria, scoping
+  per team) + `project_materials`, tabella ponte verso il **catalogo
+  prodotti** (non verso un `inventory_item` specifico: lo stesso rotolo di
+  foam/tubetto di colla puo' essere usato a pezzi su piu' progetti).
+  Quantita' e prezzo sono uno snapshot preso al momento in cui il materiale
+  viene aggiunto, non un puntatore live all'inventario — il costo di un
+  progetto non si muove da solo se dopo si modifica/consuma/elimina quel
+  prodotto in inventario. Collegamento a un `inventory_item` supportato ma
+  facoltativo, solo per tracciabilita' ("questo materiale viene da
+  quell'acquisto li'").
+- `GET/POST/PUT/DELETE /api/projects`, `POST/PUT/DELETE
+  /api/projects/{id}/materials` (o `/materials/{materialId}`): ogni
+  operazione sui materiali torna il progetto ricalcolato
+  (`materialsCost` + `laborCost` = `totalCost`). Riga materiale senza
+  prezzo esplicito: stimata con la media dei prezzi della categoria del
+  prodotto (`GET /api/categories/{id}/price-range`), 0 se la categoria non
+  ha ancora dati.
+- Verificato end-to-end: materiale con prezzo esplicito, materiale senza
+  prezzo (stima da categoria), update prezzo/quantita', rimozione — costo
+  totale ricalcolato correttamente ad ogni passo (verificato numericamente,
+  non solo "risponde 200").
+
+### Backend/App mobile — aggiungere materiali non presenti in inventario
+
+- `GET /api/products/search?q=` (match case-insensitive su nome o marca, max
+  20 risultati): prima l'unico modo di aggiungere un materiale a un progetto
+  era scegliere un prodotto gia' presente nell'inventario del team, il che
+  escludeva materiali comprati per il progetto ma mai tracciati li'. Ora
+  l'app ha due modalita' ("Dall'inventario" / "Cerca prodotto") nella stessa
+  schermata di aggiunta materiale.
+- Le **categorie restano la fonte della stima prezzo** (`GET
+  /api/categories/{id}/price-range`, gia' esistente): l'idea di sostituirle
+  con un min/max fisso impostato a mano dall'admin sulla categoria e' stata
+  scartata — il range deve restare auto-calcolato dai prezzi reali segnalati
+  in inventario per quella categoria, non un valore statico.
+- Cambio di responsabilita': la categoria di un prodotto crowdsourced non e'
+  piu' scelta dall'utente in fase di creazione (tolto il dropdown categoria
+  dal form "nuovo prodotto" dopo scan), ma solo dall'admin via `PUT
+  /api/admin/products/{id}` (dashboard, gia' esistente) — l'obiettivo e'
+  spogliare il prodotto da nome/marca e ricondurlo alla sua "essenza"
+  (es. "Foam alta densita'" vs "Foam bassa densita'", ciascuna con un range
+  di prezzo diverso), cosa che l'utente non e' nella posizione di giudicare
+  correttamente al momento dello scan.
+- Fix: `_ProjectDetailPageState._load()` usava `setState(() =>
+  _future = ...)` — stesso bug arrow-Future gia' visto altrove nell'app,
+  il rebuild non partiva mai dopo un salvataggio.
+
+### Backend/App mobile — riga materiale ancorata alla categoria, non al prodotto
+
+- Ripensamento dopo la sezione commentata di `Backlog.md` (esempio "Foam alta
+  densita' - range 40-42€" / "Armatura fuffa: Foam alta densita' - 50€, nota
+  'cosplay shop', rif prodotto opzionale"): una riga materiale di un progetto
+  ora si ancora a una **categoria** (obbligatoria, scelta dall'utente), non
+  al prodotto. Prodotto/inventory item restano facoltativi, solo per il
+  prezzo reale e la tracciabilita' — se assenti, il costo di quella riga
+  resta stimato dal range di prezzo della categoria (identico calcolo
+  gia' esistente, solo spostato da `product.category` a `material.category`,
+  quindi funziona anche per prodotti crowdsourced mai categorizzati
+  dall'admin). Aggiunta anche una nota libera per riga (es. "cosplay shop",
+  "cinese").
+- Migration `V5__project_material_category.sql`: nuova colonna
+  `project_materials.category_id` (backfillata dalla categoria del prodotto
+  dove presente), nuova colonna `note`, `product_id` reso opzionale.
+- `AddProjectMaterialRequest`/`UpdateProjectMaterialRequest`: `categoryId`
+  obbligatorio, `productId` ora facoltativo, aggiunto `note`.
+- `GET /api/products/search` accetta ora anche `categoryId` opzionale, per
+  proporre solo prodotti della categoria scelta. Fix: con `q` assente la
+  query JPQL falliva con `function lower(bytea) does not exist` (Postgres
+  non riesce a dedurre il tipo di un parametro null passato dentro
+  `LOWER()`/`CONCAT()`) — risolto con `CAST(:query AS string)` esplicito.
+- App: schermata "Aggiungi materiale" riscritta — combobox categoria (con
+  hint range prezzo), nota libera, poi un selettore prodotto facoltativo che
+  elenca sia gli articoli del proprio inventario sia risultati di ricerca
+  nel catalogo globale, entrambi filtrati per la categoria scelta.
+- Verificato via curl: riga senza prodotto/prezzo (stima da categoria, 0 se
+  la categoria non ha ancora dati), riga con prodotto+prezzo esplicito,
+  ricerca prodotti filtrata per categoria (vuota finche' l'admin non
+  categorizza almeno un prodotto in quella categoria, poi la trova).
+- Fix: stesso bug arrow-Future in altri due punti di
+  `project_detail_page.dart` (`_addMaterial`/`_removeMaterial` — 
+  `setState(() => _future = Future.value(detail))`), lista materiali/costo
+  non si aggiornava dopo aggiunta/rimozione senza uscire e rientrare dal
+  progetto.
+
+### App mobile — cambio backend a runtime (come Unwaste)
+
+- `apiBaseUrl` non e' piu' una `const` da build, ma una variabile che
+  `AuthService` puo' sovrascrivere a runtime e persiste in secure storage —
+  permette di cambiare rapidamente ambiente (locale via `adb reverse`, LAN,
+  URL custom) senza ricompilare, esattamente come `test_backend_page.dart`
+  di Unwaste. Il cambio forza il logout (il token del vecchio backend non e'
+  valido sul nuovo, utenti/team diversi tra ambienti).
+- Nuova voce "Backend (dev)" in Impostazioni, visibile solo con
+  `--dart-define=ENABLE_TEST_BACKEND_SWITCHER=true` (le build senza questo
+  flag non hanno l'interruttore, stesso principio di Unwaste).
+- Interruttore raggiungibile anche dalla `LoginPage` (bottone testuale sotto
+  "Accedi con Google"): va cambiato PRIMA di autenticarsi, non solo da
+  Impostazioni (a cui si arriva solo da loggati) — stesso posizionamento di
+  `test_backend_page.dart` in Unwaste.

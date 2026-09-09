@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../core/env.dart';
 import '../l10n/app_localizations.dart';
+import '../settings/backend_switcher_page.dart';
 import 'auth_service.dart';
 
 class LoginPage extends StatefulWidget {
@@ -57,6 +59,13 @@ class _LoginPageState extends State<LoginPage> {
                       : const Icon(Icons.login),
                   label: Text(l10n.loginWithGoogle),
                 ),
+                if (enableTestBackendSwitcher)
+                  TextButton(
+                    onPressed: () => Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const BackendSwitcherPage()),
+                    ),
+                    child: Text('Backend: ${context.watch<AuthService>().baseUrl}'),
+                  ),
               ],
             ),
           ),

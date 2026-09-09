@@ -8,14 +8,14 @@ import 'core/locale_controller.dart';
 import 'home/home_page.dart';
 import 'l10n/app_localizations.dart';
 
-class CosplayInventoryApp extends StatefulWidget {
-  const CosplayInventoryApp({super.key});
+class MyCosplayManagerApp extends StatefulWidget {
+  const MyCosplayManagerApp({super.key});
 
   @override
-  State<CosplayInventoryApp> createState() => _CosplayInventoryAppState();
+  State<MyCosplayManagerApp> createState() => _MyCosplayManagerAppState();
 }
 
-class _CosplayInventoryAppState extends State<CosplayInventoryApp> {
+class _MyCosplayManagerAppState extends State<MyCosplayManagerApp> {
   final _authService = AuthService();
   final _localeController = LocaleController();
 
@@ -43,7 +43,7 @@ class _CosplayInventoryAppState extends State<CosplayInventoryApp> {
       child: Consumer2<AuthService, LocaleController>(
         builder: (context, auth, locale, _) {
           return MaterialApp(
-            title: 'Cosplay Inventory',
+            title: 'My Cosplay Manager',
             debugShowCheckedModeBanner: false,
             theme: ThemeData(colorSchemeSeed: Colors.deepPurple, useMaterial3: true),
             locale: locale.override,
