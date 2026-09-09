@@ -58,8 +58,8 @@ services:
             - backend
             - admin
         ports:
-            - "8443:8443"
-            - "8444:8444"
+            - "9443:9443"
+            - "9444:9444"
         volumes:
             - ./Caddyfile:/etc/caddy/Caddyfile:ro
             - /etc/letsencrypt:/etc/letsencrypt:ro
