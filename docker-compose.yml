@@ -7,9 +7,11 @@ services:
             POSTGRES_DB: mycosplaymanager
             POSTGRES_USER: mycosplaymanager
             POSTGRES_PASSWORD: mycosplaymanager
-        # Niente porta pubblicata verso l'host: solo backend/altri container sulla rete
-        # docker interna ci parlano (via hostname "postgres"), nessun motivo per esporlo
-        # fuori, tanto meno su un deploy raggiungibile da internet.
+        # Pubblicata solo per accesso da client SQL (es. Beekeeper Studio) dalla LAN
+        # di casa. NON forwardare questa porta sul router: credenziali deboli, va
+        # raggiungibile solo dalla rete locale, mai da internet.
+        ports:
+            - "5432:5432"
         volumes:
             - postgres_data:/var/lib/postgresql/data
         healthcheck:
