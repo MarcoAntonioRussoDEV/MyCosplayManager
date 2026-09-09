@@ -18,12 +18,12 @@ class _BackendSwitcherPageState extends State<BackendSwitcherPage> {
     (
       label: 'Server remoto (ocrama94)',
       url: 'https://ocrama94.ddns.net:9443',
-      note: 'Server esposto pubblicamente (HTTPS), per test fuori dalla rete locale',
+      note: 'Pubblico, HTTPS — per test fuori dalla rete locale',
     ),
     (
       label: 'Locale (adb reverse)',
       url: 'http://localhost:8080',
-      note: 'adb reverse tcp:8080 tcp:8080, dispositivo USB',
+      note: 'adb reverse tcp:8080 tcp:8080 — dispositivo USB',
     ),
   ];
   static const _customValue = '__custom__';
@@ -80,7 +80,10 @@ class _BackendSwitcherPageState extends State<BackendSwitcherPage> {
     setState(() => _saving = true);
     try {
       await context.read<AuthService>().setBackendUrl(url);
-      // setBackendUrl fa signOut(): app.dart torna da solo alla LoginPage.
+      // setBackendUrl fa signOut(): svuota lo stack di navigazione cosi' il
+      // rebuild di app.dart mostra la LoginPage al posto giusto (altrimenti
+      // questa pagina resta impilata sopra e sembra bloccata per sempre).
+      if (mounted) Navigator.of(context).popUntil((route) => route.isFirst);
     } catch (e) {
       if (mounted) {
         setState(() => _saving = false);
@@ -91,12 +94,16 @@ class _BackendSwitcherPageState extends State<BackendSwitcherPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(title: const Text('Backend (dev)')),
       body: ListView(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(16),
         children: [
-          const Text('Scegli il server a cui punta l\'app. Il cambio forza il re-login.'),
+          Text(
+            'Scegli il server a cui punta l\'app. Il cambio forza il re-login.',
+            style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+          ),
           const SizedBox(height: 16),
           RadioGroup<String>(
             groupValue: _custom ? _customValue : _selected,
@@ -115,30 +122,43 @@ class _BackendSwitcherPageState extends State<BackendSwitcherPage> {
             child: Column(
               children: [
                 for (final preset in _presets)
-                  RadioListTile<String>(
-                    value: preset.url,
-                    title: Text(preset.label),
-                    subtitle: preset.note != null ? Text(preset.note!) : null,
-                  ),
-                RadioListTile<String>(value: _customValue, title: const Text('Custom')),
-                if (_custom)
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-                    child: TextField(
-                      controller: _customController,
-                      autofocus: true,
-                      keyboardType: TextInputType.url,
-                      decoration: InputDecoration(
-                        labelText: 'URL backend',
-                        hintText: 'http://192.168.1.10:8080',
-                        errorText: _customError,
-                      ),
+                  Card(
+                    margin: const EdgeInsets.only(bottom: 8),
+                    child: RadioListTile<String>(
+                      value: preset.url,
+                      title: Text(preset.label),
+                      subtitle: preset.note != null
+                          ? Text(preset.note!, style: theme.textTheme.bodySmall)
+                          : null,
                     ),
                   ),
+                Card(
+                  margin: const EdgeInsets.only(bottom: 8),
+                  child: Column(
+                    children: [
+                      RadioListTile<String>(value: _customValue, title: const Text('Custom')),
+                      if (_custom)
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                          child: TextField(
+                            controller: _customController,
+                            autofocus: true,
+                            keyboardType: TextInputType.url,
+                            decoration: InputDecoration(
+                              labelText: 'URL backend',
+                              hintText: 'http://192.168.1.10:8080',
+                              errorText: _customError,
+                              border: const OutlineInputBorder(),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 12),
           FilledButton(
             onPressed: _saving ? null : _save,
             child: _saving

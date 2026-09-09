@@ -9,6 +9,7 @@ const NAV_ITEMS = [
   { to: '/products', label: 'Prodotti', icon: '📦' },
   { to: '/categories', label: 'Categorie', icon: '🏷️' },
   { to: '/notifications', label: 'Notifiche', icon: '🔔' },
+  { to: '/admins', label: 'Admin', icon: '🔐' },
 ]
 
 export function AppShell({ children }: { children: ReactNode }) {

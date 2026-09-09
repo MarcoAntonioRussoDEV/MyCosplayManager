@@ -54,8 +54,3 @@ mycosplaymanager:
         # Web/Android Client ID di Google Cloud Console usato per verificare l'ID token
         # inviato dall'app Flutter dopo il login con google_sign_in.
         client-ids: ${GOOGLE_CLIENT_IDS:}
-    admin:
-        # Uniche email autorizzate ad accedere alla dashboard admin via Google OAuth
-        # (separate da virgola). Nessuna tabella: ricontrollata ad ogni richiesta, non
-        # solo al login, cosi' rimuovere un'email qui invalida subito anche i suoi token.
-        allowed-emails: ${ADMIN_ALLOWED_EMAILS:}

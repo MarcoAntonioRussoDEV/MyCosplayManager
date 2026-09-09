@@ -34,7 +34,6 @@ services:
             GOOGLE_CLIENT_IDS: ${GOOGLE_CLIENT_IDS}
             JWT_SECRET: ${JWT_SECRET:-ia3foHgQp0t8OOEJoB7SWTN9tafVUyyyjyif6OLhqLM=}
             FIREBASE_CREDENTIALS_PATH: /data/secrets/firebase-service-account.json
-            ADMIN_ALLOWED_EMAILS: ${ADMIN_ALLOWED_EMAILS:-}
         ports:
             - "8080:8080"
         volumes:

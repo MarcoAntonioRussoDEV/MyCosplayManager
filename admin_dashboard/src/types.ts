@@ -37,6 +37,12 @@ export interface Product {
   source: string
 }
 
+export interface AdminEmail {
+  id: string
+  email: string
+  createdAt: string
+}
+
 export interface Stats {
   userCount: number
   teamCount: number
